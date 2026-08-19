@@ -8,7 +8,7 @@ Protocol: `/start` · `/work` · `/next` (skill `ddd-start`).
 |---|--------|--------|-------|
 | 0 | onboarding | pending | explain `/start` · `/work` · `/next` + stage map |
 | 1 | bootstrap | pending | root `npm install`, env, `build:contract`, loop deps |
-| 2 | intent | pending | → `canon/01_intent.md` |
+| 2 | intent | pending | bounded grill → `canon/01_intent.md` |
 | 3 | context | pending | → `canon/02_context/context.md` |
 | 4 | event_storming | pending | → `canon/03_event_storming.dio` |
 | 5 | event_storming_analysis | pending | agreed event flow |

@@ -37,7 +37,7 @@ Monorepo: contract-first, тактические DDD + CQRS.
 
 ### Этапы 2–10 (canon)
 
-Пишут только `canon/` (`01_intent` … `08_architecture`). До этапа 11 **не** трогать пакетные `plan.yml` / `project.md`.
+Этап 2: bounded grill, затем `canon/01_intent.md`. Пишут только `canon/` (`01_intent` … `08_architecture`). До этапа 11 **не** трогать пакетные `plan.yml` / `project.md`.
 
 ### Этапы 11–17 (handoff + loops)
 

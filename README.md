@@ -251,7 +251,7 @@ contract|server|client/
 |---|--------|----------------|
 | 0 | onboarding | кратко: команды + карта этапов; `/next` = понял |
 | 1 | bootstrap | root `npm install`, `server/.env`, `build:contract`, loop deps |
-| 2–10 | canon | intent → … → architecture (`/work` правки, `/next` принять) |
+| 2–10 | canon | intent (bounded grill → `01_intent.md`) → … → architecture (`/work` правки, `/next` принять) |
 | 11 | contract_handoff | `*/project.md` + только `contract/plan.yml` |
 | 12 | run_contract_loop | help/spawn contract loop (bg); не ждать конца |
 | 13 | review_contract | review; `/work` может править `contract/src`; `/next` = approve |

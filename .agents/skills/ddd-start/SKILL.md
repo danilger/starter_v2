@@ -119,11 +119,63 @@ On `/work запусти` (or equivalent): give commands and/or run in **backgro
 
 ## Этап 2: Intent
 
-Ask for the product idea in business terms (no stack/frameworks). Strip tech noise; capture goal and primary problem; clarify; draft short intent.
+Outcome: `canon/01_intent.md` (business language, no stack/frameworks). Bounded grill is an **internal** phase of this stage — not a new PROGRESS row and not a `/next` gate.
 
-Practical rule: produce/update `canon/01_intent.md` during the stage; `/next` marks done.
+Phases (track in the intent row **Notes** in `PROGRESS.md`; do not reset the counter on `/work` or `/start` resume): `capture` → `grill N/5` → `draft` → `accept`. Example Notes: `grill 2/5; answered: actor, problem; open: v1-out; parked: success`.
 
-Set `waiting_user`. Command hints.
+### capture
+
+If there is no idea yet — ask once for the product in business terms: goal and primary problem. Strip tech noise. If the idea was already in `/start` or the user message — skip to `grill`.
+
+### grill (CRITICAL GRILL, bounded)
+
+Stress-test the idea; do not design the system.
+
+Turn format: (1) one line — what is doubtful; (2) one precise question; optionally 2–3 options, do not pick for the user.
+
+Checklist — max **5** questions, one slot per question. Slot status: `open | answered | parked`. Do **not** reopen an answered or parked slot unless the user contradicts themselves:
+
+1. primary user / whose pain
+2. one problem in one sentence
+3. what is explicitly out of v1
+4. how we will know it worked
+5. hidden assumption or contradiction
+
+Vague answer: **one** follow-up on that slot, then `parked` (`Допущение: … (не подтверждено)`) and move on.
+
+Stop — go to `draft` **in the same turn** if any of: all slots `answered` or `parked`; 5 grill questions asked; user says «достаточно» / «пиши intent» / «хватит» / `/next`.
+
+Forbidden: a new grill round after stop; refusing `/next` because the idea is “not clear enough”; inventing business rules; steering into stack/architecture; endlessly clarifying one slot.
+
+### draft
+
+Write/update `canon/01_intent.md` from what the user stated plus parked items. Do **not** create this file before the stage runs (resume would treat intent as already captured). Template:
+
+```markdown
+# Intent
+- Цель:
+- Главная проблема:
+- Для кого:
+- v1 включает:
+- v1 не включает:
+- Как поймём успех:
+- Открытые допущения:
+```
+
+Then stop grilling. Set `waiting_user`.
+
+### accept / resume
+
+If `canon/01_intent.md` already exists: do **not** restart grill. Ask `/work` (edit) or `/next`.
+
+### `/next` on stage 2 (this section only — do not add a global gate)
+
+- File missing → write it from stated + parked assumptions, then accept and execute stage 3. Do not refuse for incomplete grill.
+- File exists → mark `done`, immediately execute stage 3.
+
+Stage-2 command hints (in addition to the usual trio):
+
+> Дальше: `/work <ответ>` · достаточно → `пиши intent` или `/next` · `/start` (resume)
 
 ---
 
