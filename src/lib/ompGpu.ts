@@ -45,15 +45,35 @@ fn hash21(p: vec2f) -> f32 {
   return fract(sin(dot(p, vec2f(127.1, 311.7))) * 43758.5453);
 }
 
+fn sprayTint() -> vec3f {
+  // Tinted for light/white base (sky + violet + bright), not pure white.
+  return (u.sky.xyz * 0.28 + u.violet.xyz * 0.42 + vec3f(250.0, 250.0, 252.0) * 0.3) / 255.0;
+}
+
 @fragment
 fn fs_main(inp: VSOut) -> @location(0) vec4f {
   let xy = inp.uv * u.size;
   let d = length(xy - u.center) - u.radius;
+  let t = u.time * 0.001;
+  let frame = floor(t * 3.0);
+
+  // Hollow-side discrete spray (flying dots into empty space near crest).
   if (d < 0.0) {
+    let depth = -d;
+    let reach = 200.0 * u.scale;
+    if (depth > reach) {
+      return vec4f(0.0);
+    }
+    let fall = 1.0 - depth / reach;
+    let density = fall * fall * 0.07;
+    let cell = floor(xy * 0.55) + vec2f(frame);
+    if (hash21(cell) < density) {
+      let a = 0.35 + 0.5 * fall;
+      return vec4f(sprayTint(), a);
+    }
     return vec4f(0.0);
   }
 
-  let t = u.time * 0.001;
   let ang = atan2(xy.y - u.center.y, xy.x - u.center.x);
   let pulse = 0.55 + 0.45 * sin(ang * 18.0 + t * 1.2);
   let band = exp(-d / (14.0 * u.scale)) * pulse;
@@ -64,7 +84,22 @@ fn fs_main(inp: VSOut) -> @location(0) vec4f {
   var rgb = u.sky.xyz * band;
   rgb += u.violet.xyz * mist * (0.65 + 0.35 * n);
   rgb += u.plum.xyz * deep;
-  let alpha = clamp(band * 0.85 + mist * 0.45 + deep * 0.35, 0.0, 0.9);
+  var alpha = clamp(band * 0.85 + mist * 0.45 + deep * 0.35, 0.0, 0.9);
+
+  // Sparse speckles beyond the soft mist — denser near crest, sparse farther out.
+  let sprayReach = 280.0 * u.scale;
+  if (d < sprayReach) {
+    let fall = 1.0 - d / sprayReach;
+    let density = fall * fall * fall * 0.045;
+    let cell = floor(xy * 0.5) + vec2f(frame + 17.0);
+    if (hash21(cell) < density) {
+      let speckA = 0.4 + 0.45 * fall;
+      let tint = sprayTint();
+      rgb = max(rgb, tint * 255.0);
+      alpha = max(alpha, speckA);
+    }
+  }
+
   if (alpha < 0.01) {
     return vec4f(0.0);
   }
