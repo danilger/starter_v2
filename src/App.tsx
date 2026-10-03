@@ -1,4 +1,5 @@
 import { NavLink, Route, Routes } from 'react-router-dom'
+import { OmpStyleBackground } from './components/OmpStyleBackground'
 import { About } from './pages/About'
 import { Calculator } from './pages/Calculator'
 import { Home } from './pages/Home'
@@ -6,9 +7,10 @@ import { Weather } from './pages/Weather'
 
 function App() {
   return (
-    <>
+    <div className="relative min-h-svh bg-background">
+      <OmpStyleBackground />
       <nav
-        className="flex justify-center gap-4 border-b border-border px-4 py-3 text-sm"
+        className="relative z-10 flex justify-center gap-4 border-b border-border bg-background/70 px-4 py-3 text-sm backdrop-blur-sm"
         aria-label="Main"
       >
         <NavLink
@@ -53,13 +55,15 @@ function App() {
           Weather
         </NavLink>
       </nav>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/calculator" element={<Calculator />} />
-        <Route path="/weather" element={<Weather />} />
-      </Routes>
-    </>
+      <div className="relative z-10">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/calculator" element={<Calculator />} />
+          <Route path="/weather" element={<Weather />} />
+        </Routes>
+      </div>
+    </div>
   )
 }
 
