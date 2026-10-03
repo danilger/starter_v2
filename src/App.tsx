@@ -2,6 +2,7 @@ import { NavLink, Route, Routes } from 'react-router-dom'
 import { About } from './pages/About'
 import { Calculator } from './pages/Calculator'
 import { Home } from './pages/Home'
+import { Weather } from './pages/Weather'
 
 function App() {
   return (
@@ -41,11 +42,22 @@ function App() {
         >
           Calculator
         </NavLink>
+        <NavLink
+          to="/weather"
+          className={({ isActive }) =>
+            isActive
+              ? 'font-semibold text-foreground'
+              : 'text-muted-foreground hover:text-foreground'
+          }
+        >
+          Weather
+        </NavLink>
       </nav>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/calculator" element={<Calculator />} />
+        <Route path="/weather" element={<Weather />} />
       </Routes>
     </>
   )
