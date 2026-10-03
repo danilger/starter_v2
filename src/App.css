@@ -1,3 +1,20 @@
+.app-nav {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.app-nav a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.app-nav a.active {
+  color: var(--text-h);
+  font-weight: 600;
+}
+
 .counter {
   font-size: 16px;
   padding: 5px 10px;

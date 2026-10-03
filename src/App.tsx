@@ -1,56 +1,41 @@
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
+import { NavLink, Route, Routes } from 'react-router-dom'
+import { About } from './pages/About'
+import { Home } from './pages/Home'
 
 function App() {
-  const [name, setName] = useState('')
-  const [count, setCount] = useState(0)
-
   return (
-    <main className="flex min-h-svh flex-col items-center justify-center gap-6 p-6">
-      <Card className="w-full max-w-sm text-left">
-        <CardHeader>
-          <CardTitle>shadcn/ui</CardTitle>
-          <CardDescription>
-            Button, Card, and Input wired up for Vite + React + TypeScript.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3">
-          <Input
-            placeholder="Your name"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            aria-label="Your name"
-          />
-          <p className="text-sm text-muted-foreground">
-            {name ? `Hello, ${name}.` : 'Enter a name to preview Input.'}
-          </p>
-        </CardContent>
-        <CardFooter className="flex gap-2">
-          <Button type="button" onClick={() => setCount((value) => value + 1)}>
-            Count is {count}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              setCount(0)
-              setName('')
-            }}
-          >
-            Reset
-          </Button>
-        </CardFooter>
-      </Card>
-    </main>
+    <>
+      <nav
+        className="flex justify-center gap-4 border-b border-border px-4 py-3 text-sm"
+        aria-label="Main"
+      >
+        <NavLink
+          to="/"
+          end
+          className={({ isActive }) =>
+            isActive
+              ? 'font-semibold text-foreground'
+              : 'text-muted-foreground hover:text-foreground'
+          }
+        >
+          Home
+        </NavLink>
+        <NavLink
+          to="/about"
+          className={({ isActive }) =>
+            isActive
+              ? 'font-semibold text-foreground'
+              : 'text-muted-foreground hover:text-foreground'
+          }
+        >
+          About
+        </NavLink>
+      </nav>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
+    </>
   )
 }
 
