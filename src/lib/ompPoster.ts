@@ -212,20 +212,35 @@ function fillPoster(
     }
   }
 
+  // Silver + exterior spray: denser near the crest, falloff via cbrt distance.
+  // Hollow-side stamps (radius < crest) may write onto transparent pixels so
+  // discrete tinted dots "fly" into empty space — the alpha===0 barrier is gone.
   for (let e = 0; e < silverCount; e++) {
     const r = hashU32(e ^ 2_769_414_579)
     const theta = l + (u - l) * rand01(r)
     const band = f * (1 - Math.cbrt(rand01(r ^ 1_675_113_877)))
     const m = Math.max(band, 14 * scale)
     const h = rand01(r ^ 3_266_489_909) * m
-    const _ = c - h
+    // Bias ~60% into the hollow (spray); rest stay on/near the opaque form.
+    const intoHollow = rand01(r ^ 2_042_272_059) < 0.6
+    const radial = intoHollow ? c - h : c + h * 0.35
     const v = 0.004 + rand01(r ^ 668_265_263) * 0.011
     const y = rand01(r ^ 374_761_393) * TWO_PI
-    const xAng = theta + (-(0.06 * scale) / v) * (Math.cos(y) / Math.max(_, 1))
-    const ee = o + _ * Math.cos(xAng)
-    const S = s + _ * Math.sin(xAng)
+    const xAng =
+      theta + (-(0.06 * scale) / v) * (Math.cos(y) / Math.max(Math.abs(radial), 1))
+    const ee = o + radial * Math.cos(xAng)
+    const S = s + radial * Math.sin(xAng)
     const te = Math.max(0, Math.min(h / 3, (m - h) / (m * 0.25)))
     if (te <= 0) continue
+
+    // Tinted for white app base (not pure white-on-white).
+    const sprayR =
+      palette.sky[0] * 0.28 + palette.violet[0] * 0.42 + palette.silver[0] * 0.3
+    const sprayG =
+      palette.sky[1] * 0.28 + palette.violet[1] * 0.42 + palette.silver[1] * 0.3
+    const sprayB =
+      palette.sky[2] * 0.28 + palette.violet[2] * 0.42 + palette.silver[2] * 0.3
+    const sprayA = Math.round((0.4 + te * 0.5) * 255)
 
     const neX = Math.ceil(ee - 1.5)
     const reY = Math.ceil(S - 1.5)
@@ -234,10 +249,18 @@ function fillPoster(
       for (let px = neX; px < neX + 2; px++) {
         if (px < 0 || px >= width) continue
         const idx = (py * width + px) * 4
-        if (g[idx + 3]! === 0) continue
-        g[idx]! += (palette.silver[0] - g[idx]!) * te
-        g[idx + 1]! += (palette.silver[1] - g[idx + 1]!) * te
-        g[idx + 2]! += (palette.silver[2] - g[idx + 2]!) * te
+        if (g[idx + 3]! === 0) {
+          // Exterior / hollow spray: write discrete tinted dots on transparent.
+          g[idx] = sprayR
+          g[idx + 1] = sprayG
+          g[idx + 2] = sprayB
+          g[idx + 3] = sprayA
+        } else {
+          // In-form silver accent: blend into existing opaque mass.
+          g[idx]! += (palette.silver[0] - g[idx]!) * te
+          g[idx + 1]! += (palette.silver[1] - g[idx + 1]!) * te
+          g[idx + 2]! += (palette.silver[2] - g[idx + 2]!) * te
+        }
       }
     }
   }

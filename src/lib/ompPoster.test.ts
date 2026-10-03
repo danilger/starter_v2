@@ -19,6 +19,41 @@ describe('ompPoster', () => {
     expect(transparent).toBeGreaterThan(50)
   })
 
+  it('paints exterior spray speckles into the hollow outside the dense core', () => {
+    const width = 320
+    const height = 240
+    const { data } = renderPosterImageData(width, height, HUE_STATIC)
+    const layout = computePosterLayout(width, height)
+
+    let formOpaque = 0
+    let hollowSpray = 0
+    let nearCrestSpray = 0
+    let farHollowSpray = 0
+
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const idx = (y * width + x) * 4
+        const alpha = data[idx + 3]!
+        if (alpha === 0) continue
+        const dist =
+          Math.hypot(x - layout.centerX, y - layout.centerY) - layout.radius
+        if (dist >= 0) {
+          formOpaque++
+        } else {
+          hollowSpray++
+          const depth = -dist
+          if (depth < 80 * layout.scale) nearCrestSpray++
+          else farHollowSpray++
+        }
+      }
+    }
+
+    expect(formOpaque).toBeGreaterThan(50)
+    expect(hollowSpray).toBeGreaterThan(20)
+    // Density falls off: more spray near the crest than farther into the hollow.
+    expect(nearCrestSpray).toBeGreaterThan(farHollowSpray)
+  })
+
   it('computes a finite arc layout and respects the pixel budget helper', () => {
     const layout = computePosterLayout(960, 540)
     expect(Number.isFinite(layout.centerX)).toBe(true)
