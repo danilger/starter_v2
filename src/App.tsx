@@ -1,5 +1,6 @@
 import { NavLink, Route, Routes } from 'react-router-dom'
 import { About } from './pages/About'
+import { Calculator } from './pages/Calculator'
 import { Home } from './pages/Home'
 
 function App() {
@@ -21,6 +22,16 @@ function App() {
           Home
         </NavLink>
         <NavLink
+          to="/calculator"
+          className={({ isActive }) =>
+            isActive
+              ? 'font-semibold text-foreground'
+              : 'text-muted-foreground hover:text-foreground'
+          }
+        >
+          Calculator
+        </NavLink>
+        <NavLink
           to="/about"
           className={({ isActive }) =>
             isActive
@@ -33,6 +44,7 @@ function App() {
       </nav>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/calculator" element={<Calculator />} />
         <Route path="/about" element={<About />} />
       </Routes>
     </>
